@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html >
+<head>
+        
+    <style>
+        #app {
+            font-family: 'Avenir', Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 500px) {
+            #app {
+                text-align: left;
+                margin-top: 10px;
+            }
+
+            button {
+                display: block;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <p>Clicked {{ count }} times! Count is {{ parity }}.</p>
+
+        <button @click="increment" variant="success">Increment</button>
+        <button @click="decrement" variant="danger">Decrement</button>
+        <button @click="incrementIfOdd" variant="info">Increment if Odd</button>
+        <button @click="incrementAsync" variant="warning">Increment Async</button>
+    </div>
+
+    <!-- <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/vuex@next"></script> -->
+    <script src="https://unpkg.com/vue@2.5.17"></script>
+    <script src="https://unpkg.com/vuex@3.0.1"></script>
+
+    
+    <script>
+     
+
+        const mapGetters = Vuex.mapGetters;
+        const mapActions = Vuex.mapActions;
+        const mapState = Vuex.mapState;
+
+        const store = new Vuex.Store({
+            state: {
+                count: 0
+            },
+            getters: {
+                parity: state => state.count % 2 === 0 ? 'even' : 'odd'
+            },
+            mutations: {
+                increment(state) {
+                    state.count++;
+                },
+                decrement(state) {
+                    state.count--;
+                }
+            },
+            actions: {
+                increment: ({ commit }) => commit('increment'),
+                decrement: ({ commit }) => commit('decrement'),
+                incrementIfOdd: ({ commit, getters }) => getters.parity === 'odd' ? commit('increment') : false,
+                incrementAsync: ({ commit }) => {
+                    setTimeout(() => { commit('increment') }, 1000);
+                }
+            }
+        });
+
+        new Vue({
+            el: '#app',
+            store,
+            computed: {
+                ...mapState([
+                    'count'
+                ]),
+                ...mapGetters([
+                    'parity'
+                ])
+            },
+            methods: mapActions([
+                'increment',
+                'decrement',
+                'incrementIfOdd',
+                'incrementAsync'
+            ])
+        });
+        
+        
+    </script>
+</body>
+
+</html>
